@@ -112,27 +112,21 @@ func (q *querier) LabelValuesFor(string, labels.Label) ([]string, error) {
 }
 
 func (q *querier) Select(ms ...labels.Matcher) (SeriesSet, error) {
-	return q.sel(q.blocks, ms)
-}
-
-func (q *querier) sel(qs []Querier, ms []labels.Matcher) (SeriesSet, error) {
-	if len(qs) == 0 {
+	if len(q.blocks) == 0 {
 		return EmptySeriesSet(), nil
 	}
-	if len(qs) == 1 {
-		return qs[0].Select(ms...)
+	ss := make([]SeriesSet, len(q.blocks))
+	var s SeriesSet
+	var err error
+	for i, b := range q.blocks {
+		s, err = b.Select(ms...)
+		if err != nil {
+			return nil, err
+		}
+		ss[i] = s
 	}
-	l := len(qs) / 2
 
-	a, err := q.sel(qs[:l], ms)
-	if err != nil {
-		return nil, err
-	}
-	b, err := q.sel(qs[l:], ms)
-	if err != nil {
-		return nil, err
-	}
-	return newMergedSeriesSet(a, b), nil
+	return NewMergedSeriesSet(ss), nil
 }
 
 func (q *querier) Close() error {
@@ -530,29 +524,33 @@ func EmptySeriesSet() SeriesSet {
 	return emptySeriesSet
 }
 
-// mergedSeriesSet takes two series sets as a single series set. The input series sets
+// mergedSeriesSet takes a series sets slice as a single series set. The input series sets
 // must be sorted and sequential in time, i.e. if they have the same label set,
 // the datapoints of a must be before the datapoints of b.
 type mergedSeriesSet struct {
-	a, b SeriesSet
-
-	cur          Series
-	adone, bdone bool
+	all  []SeriesSet
+	buf  []SeriesSet // A buffer for keeping the order of SeriesSet slice during forwarding the SeriesSet.
+	ids  []int       // The indices of chosen SeriesSet for the current run.
+	done bool
+	cur  Series
 }
 
-// NewMergedSeriesSet takes two series sets as a single series set. The input series sets
+// NewMergedSeriesSet takes a series sets slice as a single series set. The input series sets
 // must be sorted and sequential in time, i.e. if they have the same label set,
 // the datapoints of a must be before the datapoints of b.
-func NewMergedSeriesSet(a, b SeriesSet) SeriesSet {
-	return newMergedSeriesSet(a, b)
-}
-
-func newMergedSeriesSet(a, b SeriesSet) *mergedSeriesSet {
-	s := &mergedSeriesSet{a: a, b: b}
+func NewMergedSeriesSet(all []SeriesSet) SeriesSet {
+	if len(all) == 1 {
+		return all[0]
+	} else if len(all) == 2 {
+		return newBinaryMergedSeriesSet(all[0], all[1])
+	}
+	s := &mergedSeriesSet{all: all}
 	// Initialize first elements of both sets as Next() needs
 	// one element look-ahead.
-	s.adone = !s.a.Next()
-	s.bdone = !s.b.Next()
+	s.nextAll()
+	if len(s.all) == 0 {
+		s.done = true
+	}
 
 	return s
 }
@@ -562,13 +560,124 @@ func (s *mergedSeriesSet) At() Series {
 }
 
 func (s *mergedSeriesSet) Err() error {
+	for _, ss := range s.all {
+		if ss.Err() != nil {
+			return ss.Err()
+		}
+	}
+	return nil
+}
+
+// This function is to call Next() for all SeriesSet.
+// Because the order of the SeriesSet slice will affect the results,
+// we need to use an buffer slice to hold the order.
+func (s *mergedSeriesSet) nextAll() {
+	s.buf = s.buf[:0]
+	for _, ss := range s.all {
+		if ss.Next() {
+			s.buf = append(s.buf, ss)
+		}
+	}
+	s.all, s.buf = s.buf, s.all
+}
+
+// This function is to call Next() for the SeriesSet with the indices of s.ids.
+// Because the order of the SeriesSet slice will affect the results,
+// we need to use an buffer slice to hold the order.
+func (s *mergedSeriesSet) nextWithID() {
+	if len(s.ids) == 0 {
+		return
+	}
+
+	s.buf = s.buf[:0]
+	i1 := 0
+	i2 := 0
+	for i1 < len(s.all) {
+		if i1 == s.ids[i2] {
+			if !s.all[s.ids[i2]].Next() {
+				i2++
+				i1++
+				continue
+			}
+			i2++
+		}
+		s.buf = append(s.buf, s.all[i1])
+		i1++
+	}
+	s.all, s.buf = s.buf, s.all
+}
+
+func (s *mergedSeriesSet) nextHelper() bool {
+	s.nextWithID()
+	s.ids = s.ids[:0]
+	if len(s.all) == 0 {
+		s.done = true
+		return false
+	}
+
+	s.ids = append(s.ids, 0)
+	for i := 1; i < len(s.all); i++ {
+		cmp := labels.Compare(s.all[s.ids[0]].At().Labels(), s.all[i].At().Labels())
+		if cmp > 0 {
+			s.ids = s.ids[:1]
+			s.ids[0] = i
+		} else if cmp == 0 {
+			s.ids = append(s.ids, i)
+		}
+	}
+	if len(s.ids) > 1 {
+		series := make([]Series, len(s.ids))
+		for i, idx := range s.ids {
+			series[i] = s.all[idx].At()
+		}
+		s.cur = &chainedSeries{series: series}
+	} else {
+		s.cur = s.all[s.ids[0]].At()
+	}
+	return true
+}
+
+func (s *mergedSeriesSet) Next() bool {
+	if s.done || s.Err() != nil {
+		return false
+	}
+
+	return s.nextHelper()
+}
+
+type binaryMergedSeriesSet struct {
+	a, b SeriesSet
+
+	cur          Series
+	adone, bdone bool
+}
+
+func NewBinaryMergedSeriesSet(a, b SeriesSet) SeriesSet {
+	return newBinaryMergedSeriesSet(a, b)
+}
+
+func newBinaryMergedSeriesSet(a, b SeriesSet) *binaryMergedSeriesSet {
+	s := &binaryMergedSeriesSet{a: a, b: b}
+	// Initialize first elements of both sets as Next() needs
+	// one element look-ahead.
+	s.adone = !s.a.Next()
+	s.bdone = !s.b.Next()
+
+	return s
+}
+
+func (s *binaryMergedSeriesSet) At() Series {
+	return s.cur
+}
+
+func (s *binaryMergedSeriesSet) Err() error {
 	if s.a.Err() != nil {
 		return s.a.Err()
 	}
 	return s.b.Err()
 }
 
-func (s *mergedSeriesSet) compare() int {
+func (s *binaryMergedSeriesSet) compare() int {
 	if s.adone {
 		return 1
 	}
@@ -578,7 +687,7 @@ func (s *mergedSeriesSet) compare() int {
 	return labels.Compare(s.a.At().Labels(), s.b.At().Labels())
 }
 
-func (s *mergedSeriesSet) Next() bool {
+func (s *binaryMergedSeriesSet) Next() bool {
 	if s.adone && s.bdone || s.Err() != nil {
 		return false
 	}
