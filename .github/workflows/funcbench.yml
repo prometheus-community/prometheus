@@ -1,5 +1,5 @@
 on: issue_comment
-name: Benchmark
+name: Funcbench
 jobs:
   commentMonitor:
     runs-on: ubuntu-latest
