@@ -7,9 +7,8 @@ jobs:
     - name: commentMonitor
       uses: docker://prombench/comment-monitor:latest
       env:
-        COMMENT_TEMPLATE: 'The benchmark has started. We are comparing this PR agains
-          branch {{ index . "BRANCH" }}. You can run the same tests with command: `go
-          test -bench {{ index . "REGEX" }} -benchmem -race -v ./...` [Github Actions logs](https://github.com/{{ index . "GITHUB_REPOSITORY" }}/commit/{{ index . "GITHUB_SHA" }}/checks)'
+        COMMENT_TEMPLATE: 'Benchmark test started against the `{{ index . "BRANCH" }}` branch with:\n
+        `go test -bench {{ index . "REGEX" }} -benchmem -race -run=^$ ./...`\nResults will be posted as another comment.\n[Full logs](https://github.com/{{ index . "GITHUB_REPOSITORY" }}/commit/{{ index . "GITHUB_SHA" }}/checks)'
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         args: '"^/funcbench ?(?P<BRANCH>[^ B\.]+)? ?(?P<REGEX>\.|Bench.*|[^ ]+)? ?(?P<RACE>-no-race)?.*$" --no-verify-user'
