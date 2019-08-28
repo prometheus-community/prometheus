@@ -57,7 +57,6 @@ jobs:
         GITHUB_REPO: prometheus
       with:
         args: >-
-          ls -la;
           export RELEASE=$(cat /github/home/commentMonitor/RELEASE);
           export PR_NUMBER=$(cat /github/home/commentMonitor/PR_NUMBER);
           cd /prombench;
