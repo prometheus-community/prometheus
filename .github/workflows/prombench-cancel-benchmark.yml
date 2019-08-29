@@ -28,7 +28,7 @@ jobs:
           "(?mi)^/prombench\s+cancel\s*$"
     - name: Delete StatefulSet to stop test
       id: delete_test_ss
-      uses: docker://prombenchgeekodour/prombench:2.0.3
+      uses: docker://prombenchgeekodour/prombench:2.0.2
       env:
         AUTH_FILE: ${{ secrets.AUTH_FILE }}
         PROJECT_ID: prombench-gsoc
