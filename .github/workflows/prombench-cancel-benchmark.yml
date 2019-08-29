@@ -39,7 +39,7 @@ jobs:
         args: >-
           export PR_NUMBER=$(cat /github/home/commentMonitor/PR_NUMBER);
           cd /prombench;
-          make delete_test_ss && kill -9 -1
+          make delete_test_ss
     - name: Post comment if delete_test_ss failed
       id: fail_notification
       if: failure()

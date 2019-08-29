@@ -60,7 +60,7 @@ jobs:
           export RELEASE=$(cat /github/home/commentMonitor/RELEASE);
           export PR_NUMBER=$(cat /github/home/commentMonitor/PR_NUMBER);
           cd /prombench;
-          make create_test_ss && kill -9 -1
+          make create_test_ss
     - name: Post comment if create_test_ss failed
       id: fail_notification
       if: failure()
