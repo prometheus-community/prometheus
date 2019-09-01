@@ -35,6 +35,7 @@ jobs:
         CLUSTER_NAME: ghaction-prom
         ZONE: us-central1-a
         TEST_INFRA_REPO: https://github.com/testpromorg/prombench.git
+        INIT_EXIT: 1
         SHELL_COMMAND: >-
           export PR_NUMBER=$(cat /github/home/commentMonitor/PR_NUMBER);
           cd /prombench;

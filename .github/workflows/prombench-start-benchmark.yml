@@ -55,6 +55,7 @@ jobs:
         TEST_INFRA_REPO: https://github.com/testpromorg/prombench.git
         GITHUB_ORG: prometheus-community
         GITHUB_REPO: prometheus
+        INIT_EXIT: 1
         SHELL_COMMAND: >-
           export RELEASE=$(cat /github/home/commentMonitor/RELEASE);
           export PR_NUMBER=$(cat /github/home/commentMonitor/PR_NUMBER);
