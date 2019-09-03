@@ -16,6 +16,8 @@ jobs:
 
           **Test deployment logs:** [{{ index . "DOMAIN_NAME" }}/grafana/explore](http://{{ index . "DOMAIN_NAME" }}/grafana/explore?orgId=1&left=%5B%22now-6h%22,%22now%22,%22loki-meta%22,%7B%22expr%22:%22%7Bjob%3D%5C%22default%2Fprombench-test-{{ index . "PR_NUMBER" }}%5C%22%7D%22%7D,%7B%22mode%22:%22Logs%22%7D,%7B%22ui%22:%5Btrue,true,true,%22none%22%5D%7D%5D)
 
+          **GitHub Actions logs:**  [{{ index . "GITHUB_SHA" }}/checks](https://github.com/{{ index . "GITHUB_REPOSITORY" }}/commit/{{ index . "GITHUB_SHA" }}/checks)'
+
           After successful deployment, the benchmarking metrics can be viewed at:
 
           - [{{ index . "DOMAIN_NAME" }}/prometheus-meta](http://{{ index . "DOMAIN_NAME" }}/prometheus-meta/graph?g0.expr={namespace%3D"prombench-{{ index . "PR_NUMBER" }}"}&g0.tab=1)
