@@ -61,7 +61,8 @@ jobs:
         args: >-
           export RELEASE=$(cat /github/home/commentMonitor/RELEASE);
           export PR_NUMBER=$(cat /github/home/commentMonitor/PR_NUMBER);
-          make deploy
+          until make all_nodepools_deleted; do echo "waiting for nodepools to be deleted"; sleep 10; done;
+          make deploy;
     - name: Post comment if make deploy failed
       id: fail_notification
       if: failure()

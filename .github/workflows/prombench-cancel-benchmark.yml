@@ -38,7 +38,8 @@ jobs:
       with:
         args: >-
           export PR_NUMBER=$(cat /github/home/commentMonitor/PR_NUMBER);
-          make clean
+          until make all_nodepools_running; do echo "waiting for nodepools to be created"; sleep 10; done;
+          make clean;
     - name: Post comment if delete_test_ss failed
       id: fail_notification
       if: failure()
