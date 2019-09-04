@@ -47,5 +47,5 @@ jobs:
       if: failure()
       uses: docker://prombench/comment-monitor:0.0.1
       env:
-        COMMENT_TEMPLATE: "prombench cancel failed"
+        COMMENT_TEMPLATE: "prombench test cancel failed. Please see logs for more info."
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

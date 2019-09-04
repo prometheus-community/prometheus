@@ -1,8 +1,8 @@
 on: issue_comment
-name: Prombench Start Benchmark
+name: Prombench Restart Benchmark
 jobs:
-  pre_benchmark_start:
-    name: Pre Benchmark Start
+  pre_benchmark_restart:
+    name: Pre Benchmark Restart
     runs-on: ubuntu-latest
     steps:
     - name: Validate comment
@@ -31,10 +31,10 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         args: >-
-          "(?mi)^/prombench\s*(?P<RELEASE>master|v[0-9]+\.[0-9]+\.[0-9]+\S*)\s*$"
-  benchmark_start:
-    name: Benchmark Start
-    needs: pre_benchmark_start
+          "(?mi)^/prombench\s+restart\s+(?P<RELEASE>master|v[0-9]+\.[0-9]+\.[0-9]+\S*)\s*$"
+  benchmark_restart:
+    name: Benchmark Restart
+    needs: pre_benchmark_restart
     runs-on: ubuntu-latest
     steps:
     - name: Extract arguments
@@ -42,7 +42,7 @@ jobs:
       uses: docker://prombench/comment-monitor:0.0.1
       with:
         args: >-
-          "(?mi)^/prombench\s*(?P<RELEASE>master|v[0-9]+\.[0-9]+\.[0-9]+\S*)\s*$"
+          "(?mi)^/prombench\s+restart\s+(?P<RELEASE>master|v[0-9]+\.[0-9]+\.[0-9]+\S*)\s*$"
     - name: Run make deploy to start test
       id: make_deploy
       uses: docker://prombench/prombench:2.0.2
@@ -59,6 +59,8 @@ jobs:
         args: >-
           export RELEASE=$(cat /github/home/commentMonitor/RELEASE);
           export PR_NUMBER=$(cat /github/home/commentMonitor/PR_NUMBER);
+          until make all_nodepools_running; do echo "waiting for nodepools to be created"; sleep 10; done;
+          make clean;
           until make all_nodepools_deleted; do echo "waiting for nodepools to be deleted"; sleep 10; done;
           make deploy;
     - name: Post comment if make deploy failed
@@ -66,5 +68,5 @@ jobs:
       if: failure()
       uses: docker://prombench/comment-monitor:0.0.1
       env:
-        COMMENT_TEMPLATE: "prombench test start failed. Please see logs for more info."
+        COMMENT_TEMPLATE: "prombench test restart failed. Please see logs for more info."
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
