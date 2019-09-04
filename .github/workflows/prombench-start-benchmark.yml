@@ -47,7 +47,7 @@ jobs:
           "(?mi)^/prombench\s*(?P<RELEASE>master|v[0-9]+\.[0-9]+\.[0-9]+\S*)\s*$"
     - name: Run make deploy to start test
       id: make_deploy
-      uses: docker://prombenchgeekodour/prombench:2.0.2
+      uses: docker://prombench/prombench:2.0.2
       env:
         AUTH_FILE: ${{ secrets.AUTH_FILE }}
         PROJECT_ID: prombench-gsoc
