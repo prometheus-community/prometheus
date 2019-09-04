@@ -45,8 +45,8 @@ jobs:
       with:
         args: >-
           "(?mi)^/prombench\s*(?P<RELEASE>master|v[0-9]+\.[0-9]+\.[0-9]+\S*)\s*$"
-    - name: Create StatefulSet to start test
-      id: create_test_ss
+    - name: Run make deploy to start test
+      id: make_deploy
       uses: docker://prombenchgeekodour/prombench:2.0.2
       env:
         AUTH_FILE: ${{ secrets.AUTH_FILE }}
@@ -57,16 +57,15 @@ jobs:
         TEST_INFRA_REPO: https://github.com/testpromorg/prombench.git
         GITHUB_ORG: prometheus-community
         GITHUB_REPO: prometheus
-        INIT_EXIT: 1
-        SHELL_COMMAND: >-
+      with:
+        args: >-
           export RELEASE=$(cat /github/home/commentMonitor/RELEASE);
           export PR_NUMBER=$(cat /github/home/commentMonitor/PR_NUMBER);
-          cd /prombench;
-          make create_test_ss
-    - name: Post comment if create_test_ss failed
+          make deploy
+    - name: Post comment if make deploy failed
       id: fail_notification
       if: failure()
       uses: docker://prombench/comment-monitor:0.0.1
       env:
-        COMMENT_TEMPLATE: "prombench start failed"
+        COMMENT_TEMPLATE: "make deploy failed."
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

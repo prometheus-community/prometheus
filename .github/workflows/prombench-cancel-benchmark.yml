@@ -26,8 +26,8 @@ jobs:
       with:
         args: >-
           "(?mi)^/prombench\s+cancel\s*$"
-    - name: Delete StatefulSet to stop test
-      id: delete_test_ss
+    - name: Run make clean to stop test
+      id: make_clean
       uses: docker://prombenchgeekodour/prombench:2.0.2
       env:
         AUTH_FILE: ${{ secrets.AUTH_FILE }}
@@ -35,11 +35,10 @@ jobs:
         CLUSTER_NAME: ghaction-prom
         ZONE: us-central1-a
         TEST_INFRA_REPO: https://github.com/testpromorg/prombench.git
-        INIT_EXIT: 1
-        SHELL_COMMAND: >-
+      with:
+        args: >-
           export PR_NUMBER=$(cat /github/home/commentMonitor/PR_NUMBER);
-          cd /prombench;
-          make delete_test_ss
+          make clean
     - name: Post comment if delete_test_ss failed
       id: fail_notification
       if: failure()
