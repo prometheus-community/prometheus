@@ -10,7 +10,9 @@ jobs:
       uses: docker://prombench/comment-monitor:0.0.1
       env:
         COMMENT_TEMPLATE: |
-          Benchmark cancel is in progress
+          Benchmark cancel is in progress.
+
+          **GitHub Actions logs:**  [{{ index . "GITHUB_SHA" }}/checks](https://github.com/{{ index . "GITHUB_REPOSITORY" }}/commit/{{ index . "GITHUB_SHA" }}/checks)'
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         args: >-
