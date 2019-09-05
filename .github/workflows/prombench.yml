@@ -1,5 +1,5 @@
 on: issue_comment
-name: Prombench Start Benchmark
+name: Prombench Workflow
 jobs:
   #############################
   # Jobs for starting benchmark  
