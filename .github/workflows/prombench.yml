@@ -2,7 +2,7 @@ on: issue_comment
 name: Prombench Workflow
 jobs:
   #############################
-  # Jobs for starting benchmark  
+  # Jobs for starting benchmark
   #############################
   pre_benchmark_start:
     name: Pre Benchmark Start
@@ -168,7 +168,7 @@ jobs:
         args: >-
           "(?mi)^/prombench\s+restart\s+(?P<RELEASE>master|v[0-9]+\.[0-9]+\.[0-9]+\S*)\s*$"
     - name: Run make clean then make deploy to restart test
-      id: make_deploy
+      id: make_restart
       uses: docker://prombench/prombench:2.0.2
       env:
         AUTH_FILE: ${{ secrets.AUTH_FILE }}
