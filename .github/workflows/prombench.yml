@@ -4,6 +4,8 @@ jobs:
   #############################
   # Jobs for starting benchmark
   #############################
+  # We need a `pre_benchmark_*` job because if conditionals are not yet supported for steps, see:
+  # https://github.community/t5/GitHub-Actions/Github-Actions-Contexts-and-steps-if-conditionals-are-unusable/m-p/29669/highlight/true#M8294
   pre_benchmark_start:
     name: Pre Benchmark Start
     runs-on: ubuntu-latest
