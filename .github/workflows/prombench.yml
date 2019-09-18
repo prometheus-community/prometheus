@@ -57,7 +57,7 @@ jobs:
         CLUSTER_NAME: ghaction-prom
         ZONE: us-central1-a
         DOMAIN_NAME: prombench.geekodour.xyz
-        TEST_INFRA_REPO: https://github.com/prometheus/prombench.git
+        TEST_INFRA_REPO: https://github.com/testpromorg/prombench.git
         GITHUB_ORG: prometheus-community
         GITHUB_REPO: prometheus
       with:
@@ -111,7 +111,7 @@ jobs:
         PROJECT_ID: macro-mile-203600
         CLUSTER_NAME: ghaction-prom
         ZONE: us-central1-a
-        TEST_INFRA_REPO: https://github.com/prometheus/prombench.git
+        TEST_INFRA_REPO: https://github.com/testpromorg/prombench.git
       with:
         args: >-
           export PR_NUMBER=$(cat /github/home/commentMonitor/PR_NUMBER);
@@ -178,7 +178,7 @@ jobs:
         CLUSTER_NAME: ghaction-prom
         ZONE: us-central1-a
         DOMAIN_NAME: prombench.geekodour.xyz
-        TEST_INFRA_REPO: https://github.com/prometheus/prombench.git
+        TEST_INFRA_REPO: https://github.com/testpromorg/prombench.git
         GITHUB_ORG: prometheus-community
         GITHUB_REPO: prometheus
       with:
