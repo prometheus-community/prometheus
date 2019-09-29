@@ -119,7 +119,7 @@ jobs:
           export PR_NUMBER=$(cat /github/home/commentMonitor/PR_NUMBER);
           until make all_nodepools_running; do echo "waiting for nodepools to be created"; sleep 10; done;
           make clean;
-    - name: Post comment if delete_test_ss failed
+    - name: Post comment if make clean failed
       id: fail_notification
       if: failure()
       uses: docker://prombench/comment-monitor:0.0.1
