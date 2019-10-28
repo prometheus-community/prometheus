@@ -29,13 +29,16 @@ jobs:
       if: failure()
       uses: docker://prombench/comment-monitor:0.0.2
       env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GH_OWNER: prometheus-community
+        GH_REPO: prometheus
+        GH_PR: ${{ github.event.client_payload.PR_NUMBER }}
         COMMENT_TEMPLATE: |
           Prombench test **start** failed. Please see logs for more info.
 
           **GitHub Actions logs:**  [{{ index . "GITHUB_SHA" }}/checks](https://github.com/{{ index . "GITHUB_REPOSITORY" }}/commit/{{ index . "GITHUB_SHA" }}/checks)
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   #############################
-  # Jobs for stopping benchmark  
+  # Jobs for stopping benchmark
   #############################
   benchmark_cancel:
     name: Benchmark Cancel
@@ -59,13 +62,16 @@ jobs:
     - name: Post comment if make clean failed
       id: fail_notification
       if: failure()
-      uses: docker://prombench/comment-monitor:0.0.1
+      uses: docker://prombench/comment-monitor:0.0.2
       env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GH_OWNER: prometheus-community
+        GH_REPO: prometheus
+        GH_PR: ${{ github.event.client_payload.PR_NUMBER }}
         COMMENT_TEMPLATE: |
           Prombench test **cancel** failed. Please see logs for more info."
 
           **GitHub Actions logs:**  [{{ index . "GITHUB_SHA" }}/checks](https://github.com/{{ index . "GITHUB_REPOSITORY" }}/commit/{{ index . "GITHUB_SHA" }}/checks)
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   ###############################
   # Jobs for restarting benchmark  
   ###############################
@@ -97,9 +103,12 @@ jobs:
     - name: Post comment if make deploy failed
       id: fail_notification
       if: failure()
-      uses: docker://prombench/comment-monitor:0.0.1
+      uses: docker://prombench/comment-monitor:0.0.2
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GH_OWNER: prometheus-community
+        GH_REPO: prometheus
+        GH_PR: ${{ github.event.client_payload.PR_NUMBER }}
         COMMENT_TEMPLATE: |
           Prombench test **restart** failed. Please see logs for more info."
 
