@@ -6,6 +6,10 @@ jobs:
     if: github.event.action == 'prombench_start'
     runs-on: ubuntu-latest
     steps:
+    - name: Dump runner context
+      env:
+        RUNNER_CONTEXT: ${{ toJson(runner) }}
+      run: echo "$RUNNER_CONTEXT"
     - name: Post log info as a comment
       id: comment_log
       uses: docker://prombench/comment-monitor:0.0.2
