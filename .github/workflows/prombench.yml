@@ -18,10 +18,10 @@ jobs:
         TEST_INFRA_REPO: https://github.com/prometheus/prombench.git
         GITHUB_ORG: prometheus-community
         GITHUB_REPO: prometheus
+        PR_NUMBER: ${{ github.event.client_payload.PR_NUMBER }}
+        RELEASE: ${{ github.event.client_payload.RELEASE }}
       with:
         args: >-
-          export RELEASE=$(cat /github/home/commentMonitor/RELEASE);
-          export PR_NUMBER=$(cat /github/home/commentMonitor/PR_NUMBER);
           until make all_nodepools_deleted; do echo "waiting for nodepools to be deleted"; sleep 10; done;
           make deploy;
     - name: Post comment if make deploy failed
@@ -30,9 +30,9 @@ jobs:
       uses: docker://prombench/comment-monitor:0.0.2
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        GH_OWNER: prometheus-community
-        GH_REPO: prometheus
-        GH_PR: ${{ github.event.client_payload.PR_NUMBER }}
+        GITHUB_ORG: prometheus-community
+        GITHUB_REPO: prometheus
+        PR_NUMBER: ${{ github.event.client_payload.PR_NUMBER }}
         COMMENT_TEMPLATE: |
           Prombench test **start** failed. Please see logs for more info.
 
@@ -54,9 +54,9 @@ jobs:
         CLUSTER_NAME: ghaction-prom
         ZONE: us-central1-a
         TEST_INFRA_REPO: https://github.com/prometheus/prombench.git
+        PR_NUMBER: ${{ github.event.client_payload.PR_NUMBER }}
       with:
         args: >-
-          export PR_NUMBER=$(cat /github/home/commentMonitor/PR_NUMBER);
           until make all_nodepools_running; do echo "waiting for nodepools to be created"; sleep 10; done;
           make clean;
     - name: Post comment if make clean failed
@@ -65,9 +65,9 @@ jobs:
       uses: docker://prombench/comment-monitor:0.0.2
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        GH_OWNER: prometheus-community
-        GH_REPO: prometheus
-        GH_PR: ${{ github.event.client_payload.PR_NUMBER }}
+        GITHUB_ORG: prometheus-community
+        GITHUB_REPO: prometheus
+        PR_NUMBER: ${{ github.event.client_payload.PR_NUMBER }}
         COMMENT_TEMPLATE: |
           Prombench test **cancel** failed. Please see logs for more info."
 
@@ -92,10 +92,10 @@ jobs:
         TEST_INFRA_REPO: https://github.com/prometheus/prombench.git
         GITHUB_ORG: prometheus-community
         GITHUB_REPO: prometheus
+        PR_NUMBER: ${{ github.event.client_payload.PR_NUMBER }}
+        RELEASE: ${{ github.event.client_payload.RELEASE }}
       with:
         args: >-
-          export RELEASE=$(cat /github/home/commentMonitor/RELEASE);
-          export PR_NUMBER=$(cat /github/home/commentMonitor/PR_NUMBER);
           until make all_nodepools_running; do echo "waiting for nodepools to be created"; sleep 10; done;
           make clean;
           until make all_nodepools_deleted; do echo "waiting for nodepools to be deleted"; sleep 10; done;
@@ -106,9 +106,9 @@ jobs:
       uses: docker://prombench/comment-monitor:0.0.2
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        GH_OWNER: prometheus-community
-        GH_REPO: prometheus
-        GH_PR: ${{ github.event.client_payload.PR_NUMBER }}
+        GITHUB_ORG: prometheus-community
+        GITHUB_REPO: prometheus
+        PR_NUMBER: ${{ github.event.client_payload.PR_NUMBER }}
         COMMENT_TEMPLATE: |
           Prombench test **restart** failed. Please see logs for more info."
 
