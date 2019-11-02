@@ -21,8 +21,8 @@ jobs:
       uses: docker://prombench/prombench:2.0.2
       env:
         AUTH_FILE: ${{ secrets.PROMBENCH_GKE_AUTH }}
-        PROJECT_ID: prombench-gsoc
-        CLUSTER_NAME: ghaction-prom
+        PROJECT_ID: macro-mile-203600
+        CLUSTER_NAME: prombench
         ZONE: us-central1-a
         DOMAIN_NAME: prombench.geekodour.xyz
         TEST_INFRA_REPO: https://github.com/prometheus/prombench.git
@@ -70,8 +70,8 @@ jobs:
       uses: docker://prombench/prombench:2.0.2
       env:
         AUTH_FILE: ${{ secrets.PROMBENCH_GKE_AUTH }}
-        PROJECT_ID: prombench-gsoc
-        CLUSTER_NAME: ghaction-prom
+        PROJECT_ID: macro-mile-203600
+        CLUSTER_NAME: prombench
         ZONE: us-central1-a
         TEST_INFRA_REPO: https://github.com/prometheus/prombench.git
         PR_NUMBER: ${{ github.event.client_payload.PR_NUMBER }}
@@ -115,8 +115,8 @@ jobs:
       uses: docker://prombench/prombench:2.0.2
       env:
         AUTH_FILE: ${{ secrets.PROMBENCH_GKE_AUTH }}
-        PROJECT_ID: prombench-gsoc
-        CLUSTER_NAME: ghaction-prom
+        PROJECT_ID: macro-mile-203600
+        CLUSTER_NAME: prombench
         ZONE: us-central1-a
         DOMAIN_NAME: prombench.geekodour.xyz
         TEST_INFRA_REPO: https://github.com/prometheus/prombench.git
