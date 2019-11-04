@@ -15,7 +15,7 @@ jobs:
         args: >-
           --state=pending
           --context=prombench-update
-          --target_url=${{ github.ref }}
+          --target_url=https://google.com
     - name: Run make deploy to start test
       id: make_deploy
       uses: docker://prombench/prombench:2.0.2
