@@ -14,8 +14,8 @@ jobs:
       with:
         args: >-
           --state=pending
-          --context=prombench-update
-          --target_url=https://google.com
+          --context=prombench-status-update
+          --target_url=https://github.com/${{ github.repository }}/actions
     - name: Run make deploy to start test
       id: make_deploy
       uses: docker://prombench/prombench:2.0.2
@@ -34,19 +34,28 @@ jobs:
         args: >-
           until make all_nodepools_deleted; do echo "waiting for nodepools to be deleted"; sleep 10; done;
           make deploy;
-    - name: Post comment if make deploy failed
-      id: fail_notification
+    - name: Update status to failure
       if: failure()
-      uses: docker://prombench/comment-monitor:0.0.2
+      uses: geekodour/gh-actions-custom-status@v0.0.4
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        GITHUB_ORG: prometheus-community
-        GITHUB_REPO: prometheus
-        PR_NUMBER: ${{ github.event.client_payload.PR_NUMBER }}
-        COMMENT_TEMPLATE: |
-          Prombench test **start** failed. Please see logs for more info.
-
-          **GitHub Actions logs:**  [{{ index . "GITHUB_SHA" }}/checks](https://github.com/{{ index . "GITHUB_REPOSITORY" }}/commit/{{ index . "GITHUB_SHA" }}/checks)
+        LAST_COMMIT_SHA: ${{ github.event.client_payload.LAST_COMMIT_SHA }}
+      with:
+        args: >-
+          --state=failure
+          --context=prombench-status-update
+          --target_url=https://github.com/${{ github.repository }}/actions
+    - name: Update status to success
+      if: success()
+      uses: geekodour/gh-actions-custom-status@v0.0.4
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        LAST_COMMIT_SHA: ${{ github.event.client_payload.LAST_COMMIT_SHA }}
+      with:
+        args: >-
+          --state=success
+          --context=prombench-status-update
+          --target_url=https://github.com/${{ github.repository }}/actions
   #############################
   # Jobs for stopping benchmark
   #############################
