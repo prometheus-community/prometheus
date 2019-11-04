@@ -21,7 +21,7 @@ jobs:
       uses: docker://prombench/prombench:2.0.2
       env:
         AUTH_FILE: ${{ secrets.PROMBENCH_GKE_AUTH }}
-        PROJECT_ID: macro-mile
+        PROJECT_ID: macro-mile-203600
         CLUSTER_NAME: prombench
         ZONE: us-central1-a
         DOMAIN_NAME: prombench.geekodour.xyz
@@ -32,7 +32,8 @@ jobs:
         RELEASE: ${{ github.event.client_payload.RELEASE }}
       with:
         args: >-
-          ls
+          until make all_nodepools_deleted; do echo "waiting for nodepools to be deleted"; sleep 10; done;
+          make deploy;
     - name: Update status to failure
       if: failure()
       uses: geekodour/gh-actions-custom-status@v0.0.4
@@ -63,16 +64,16 @@ jobs:
     if: github.event.action == 'prombench_stop'
     runs-on: ubuntu-latest
     steps:
-    - name: Post log info as a comment
-      id: comment_log
-      uses: docker://prombench/comment-monitor:0.0.2
+    - name: Update status to pending
+      uses: geekodour/gh-actions-custom-status@v0.0.4
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        GITHUB_ORG: prometheus-community
-        GITHUB_REPO: prometheus
-        PR_NUMBER: ${{ github.event.client_payload.PR_NUMBER }}
-        COMMENT_TEMPLATE: |
-          **GitHub Actions logs:**  [{{ index . "GITHUB_SHA" }}/checks](https://github.com/{{ index . "GITHUB_REPOSITORY" }}/commit/{{ index . "GITHUB_SHA" }}/checks)
+        LAST_COMMIT_SHA: ${{ github.event.client_payload.LAST_COMMIT_SHA }}
+      with:
+        args: >-
+          --state=pending
+          --context=prombench-status-update
+          --target_url=https://github.com/${{ github.repository }}/actions
     - name: Run make clean to stop test
       id: make_clean
       uses: docker://prombench/prombench:2.0.2
@@ -87,19 +88,28 @@ jobs:
         args: >-
           until make all_nodepools_running; do echo "waiting for nodepools to be created"; sleep 10; done;
           make clean;
-    - name: Post comment if make clean failed
-      id: fail_notification
+    - name: Update status to failure
       if: failure()
-      uses: docker://prombench/comment-monitor:0.0.2
+      uses: geekodour/gh-actions-custom-status@v0.0.4
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        GITHUB_ORG: prometheus-community
-        GITHUB_REPO: prometheus
-        PR_NUMBER: ${{ github.event.client_payload.PR_NUMBER }}
-        COMMENT_TEMPLATE: |
-          Prombench test **cancel** failed. Please see logs for more info."
-
-          **GitHub Actions logs:**  [{{ index . "GITHUB_SHA" }}/checks](https://github.com/{{ index . "GITHUB_REPOSITORY" }}/commit/{{ index . "GITHUB_SHA" }}/checks)
+        LAST_COMMIT_SHA: ${{ github.event.client_payload.LAST_COMMIT_SHA }}
+      with:
+        args: >-
+          --state=failure
+          --context=prombench-status-update
+          --target_url=https://github.com/${{ github.repository }}/actions
+    - name: Update status to success
+      if: success()
+      uses: geekodour/gh-actions-custom-status@v0.0.4
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        LAST_COMMIT_SHA: ${{ github.event.client_payload.LAST_COMMIT_SHA }}
+      with:
+        args: >-
+          --state=success
+          --context=prombench-status-update
+          --target_url=https://github.com/${{ github.repository }}/actions
   ###############################
   # Jobs for restarting benchmark  
   ###############################
@@ -108,16 +118,16 @@ jobs:
     if: github.event.action == 'prombench_restart'
     runs-on: ubuntu-latest
     steps:
-    - name: Post log info as a comment
-      id: comment_log
-      uses: docker://prombench/comment-monitor:0.0.2
+    - name: Update status to pending
+      uses: geekodour/gh-actions-custom-status@v0.0.4
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        GITHUB_ORG: prometheus-community
-        GITHUB_REPO: prometheus
-        PR_NUMBER: ${{ github.event.client_payload.PR_NUMBER }}
-        COMMENT_TEMPLATE: |
-          **GitHub Actions logs:**  [{{ index . "GITHUB_SHA" }}/checks](https://github.com/{{ index . "GITHUB_REPOSITORY" }}/commit/{{ index . "GITHUB_SHA" }}/checks)
+        LAST_COMMIT_SHA: ${{ github.event.client_payload.LAST_COMMIT_SHA }}
+      with:
+        args: >-
+          --state=pending
+          --context=prombench-status-update
+          --target_url=https://github.com/${{ github.repository }}/actions
     - name: Run make clean then make deploy to restart test
       id: make_restart
       uses: docker://prombench/prombench:2.0.2
@@ -138,16 +148,25 @@ jobs:
           make clean;
           until make all_nodepools_deleted; do echo "waiting for nodepools to be deleted"; sleep 10; done;
           make deploy;
-    - name: Post comment if make deploy failed
-      id: fail_notification
+    - name: Update status to failure
       if: failure()
-      uses: docker://prombench/comment-monitor:0.0.2
+      uses: geekodour/gh-actions-custom-status@v0.0.4
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        GITHUB_ORG: prometheus-community
-        GITHUB_REPO: prometheus
-        PR_NUMBER: ${{ github.event.client_payload.PR_NUMBER }}
-        COMMENT_TEMPLATE: |
-          Prombench test **restart** failed. Please see logs for more info."
-
-          **GitHub Actions logs:**  [{{ index . "GITHUB_SHA" }}/checks](https://github.com/{{ index . "GITHUB_REPOSITORY" }}/commit/{{ index . "GITHUB_SHA" }}/checks)
+        LAST_COMMIT_SHA: ${{ github.event.client_payload.LAST_COMMIT_SHA }}
+      with:
+        args: >-
+          --state=failure
+          --context=prombench-status-update
+          --target_url=https://github.com/${{ github.repository }}/actions
+    - name: Update status to success
+      if: success()
+      uses: geekodour/gh-actions-custom-status@v0.0.4
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        LAST_COMMIT_SHA: ${{ github.event.client_payload.LAST_COMMIT_SHA }}
+      with:
+        args: >-
+          --state=success
+          --context=prombench-status-update
+          --target_url=https://github.com/${{ github.repository }}/actions
