@@ -10,6 +10,7 @@ jobs:
       uses: geekodour/gh-actions-custom-status@v0.0.2
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_REF: ${{ github.event.client_payload.LAST_COMMIT_SHA }}
       with:
         args: >-
           --state=pending
