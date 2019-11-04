@@ -32,8 +32,7 @@ jobs:
         RELEASE: ${{ github.event.client_payload.RELEASE }}
       with:
         args: >-
-          until make all_nodepools_deleted; do echo "waiting for nodepools to be deleted"; sleep 10; done;
-          make deploy;
+          ls
     - name: Update status to failure
       if: failure()
       uses: geekodour/gh-actions-custom-status@v0.0.4
