@@ -6,16 +6,15 @@ jobs:
     if: github.event.action == 'prombench_start'
     runs-on: ubuntu-latest
     steps:
-    - name: Post log info as a comment
-      id: comment_log
-      uses: docker://prombench/comment-monitor:0.0.2
+    - name: Update status to pending
+      uses: geekodour/gh-actions-custom-status@v0.0.1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        GITHUB_ORG: prometheus-community
-        GITHUB_REPO: prometheus
-        PR_NUMBER: ${{ github.event.client_payload.PR_NUMBER }}
-        COMMENT_TEMPLATE: |
-          **GitHub Actions logs:**  [{{ index . "GITHUB_SHA" }}/checks](https://github.com/{{ index . "GITHUB_REPOSITORY" }}/commit/{{ index . "GITHUB_SHA" }}/checks)
+      with:
+        args: >-
+          --status=pending
+          --context=prombench-update
+          --target-url=${{ github.ref }}
     - name: Run make deploy to start test
       id: make_deploy
       uses: docker://prombench/prombench:2.0.2
