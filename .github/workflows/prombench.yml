@@ -12,9 +12,9 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         args: >-
-          --status=pending
+          --state=pending
           --context=prombench-update
-          --target-url=${{ github.ref }}
+          --target_url=${{ github.ref }}
     - name: Run make deploy to start test
       id: make_deploy
       uses: docker://prombench/prombench:2.0.2
