@@ -7,10 +7,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Update status to pending
-      uses: geekodour/gh-actions-custom-status@v0.0.2
+      uses: geekodour/gh-actions-custom-status@v0.0.3
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        GITHUB_REF: ${{ github.event.client_payload.LAST_COMMIT_SHA }}
+        LAST_COMMIT_SHA: ${{ github.event.client_payload.LAST_COMMIT_SHA }}
       with:
         args: >-
           --state=pending
