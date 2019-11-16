@@ -15,8 +15,8 @@ jobs:
         curl -i -X POST \
         -H "Authorization: Bearer $GITHUB_TOKEN" \
         -H "Content-Type: application/json" \
-        --data '{"state":"pending",  "context": "prombench-status-update", "target_url": "https://github.com/prometheus/prometheus/actions"}' \
-        "https://api.github.com/repos/prometheus/prometheus/statuses/$LAST_COMMIT_SHA"
+        --data '{"state":"pending",  "context": "prombench-status-update", "target_url": "https://github.com/$GITHUB_REPOSITORY/actions"}' \
+        "https://api.github.com/repos/$GITHUB_REPOSITORY/statuses/$LAST_COMMIT_SHA"
     - name: Run make deploy to start test
       id: make_deploy
       uses: docker://prombench/prombench:2.0.2
