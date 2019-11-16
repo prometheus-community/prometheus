@@ -11,7 +11,6 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         LAST_COMMIT_SHA: ${{ github.event.client_payload.LAST_COMMIT_SHA }}
-        DOME_ENV: ${{ toJson(github.event.client_payload) }}
       with:
         args: >-
           --state=pending
