@@ -11,10 +11,10 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         LAST_COMMIT_SHA: ${{ github.event.client_payload.LAST_COMMIT_SHA }}
       run: >-
-        curl -i -X POST \
-        -H "Authorization: Bearer $GITHUB_TOKEN" \
-        -H "Content-Type: application/json" \
-        --data '{"state":"pending",  "context": "prombench-status-update", "target_url": "https://github.com/$GITHUB_REPOSITORY/actions"}' \
+        curl -i -X POST
+        -H "Authorization: Bearer $GITHUB_TOKEN"
+        -H "Content-Type: application/json"
+        --data '{"state":"pending",  "context": "prombench-status-update", "target_url": "https://github.com/$GITHUB_REPOSITORY/actions"}'
         "https://api.github.com/repos/$GITHUB_REPOSITORY/statuses/$LAST_COMMIT_SHA"
     - name: Run make deploy to start test
       id: make_deploy
