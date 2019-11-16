@@ -36,26 +36,26 @@ jobs:
           make deploy;
     - name: Update status to failure
       if: failure()
-      uses: geekodour/gh-actions-custom-status@v0.0.4
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         LAST_COMMIT_SHA: ${{ github.event.client_payload.LAST_COMMIT_SHA }}
-      with:
-        args: >-
-          --state=failure
-          --context=prombench-status-update
-          --target_url=https://github.com/${{ github.repository }}/actions
+      run: >-
+        curl -i -X POST
+        -H "Authorization: Bearer $GITHUB_TOKEN"
+        -H "Content-Type: application/json"
+        --data '{"state":"failure",  "context": "prombench-status-update", "target_url": "https://github.com/'$GITHUB_REPOSITORY'/actions"}'
+        "https://api.github.com/repos/$GITHUB_REPOSITORY/statuses/$LAST_COMMIT_SHA"
     - name: Update status to success
       if: success()
-      uses: geekodour/gh-actions-custom-status@v0.0.4
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         LAST_COMMIT_SHA: ${{ github.event.client_payload.LAST_COMMIT_SHA }}
-      with:
-        args: >-
-          --state=success
-          --context=prombench-status-update
-          --target_url=https://github.com/${{ github.repository }}/actions
+      run: >-
+        curl -i -X POST
+        -H "Authorization: Bearer $GITHUB_TOKEN"
+        -H "Content-Type: application/json"
+        --data '{"state":"success",  "context": "prombench-status-update", "target_url": "https://github.com/'$GITHUB_REPOSITORY'/actions"}'
+        "https://api.github.com/repos/$GITHUB_REPOSITORY/statuses/$LAST_COMMIT_SHA"
   #############################
   # Jobs for stopping benchmark
   #############################
@@ -65,15 +65,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Update status to pending
-      uses: geekodour/gh-actions-custom-status@v0.0.4
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         LAST_COMMIT_SHA: ${{ github.event.client_payload.LAST_COMMIT_SHA }}
-      with:
-        args: >-
-          --state=pending
-          --context=prombench-status-update
-          --target_url=https://github.com/${{ github.repository }}/actions
+      run: >-
+        curl -i -X POST
+        -H "Authorization: Bearer $GITHUB_TOKEN"
+        -H "Content-Type: application/json"
+        --data '{"state":"pending",  "context": "prombench-status-update", "target_url": "https://github.com/'$GITHUB_REPOSITORY'/actions"}'
+        "https://api.github.com/repos/$GITHUB_REPOSITORY/statuses/$LAST_COMMIT_SHA"
     - name: Run make clean to stop test
       id: make_clean
       uses: docker://prombench/prombench:2.0.2
@@ -90,26 +90,26 @@ jobs:
           make clean;
     - name: Update status to failure
       if: failure()
-      uses: geekodour/gh-actions-custom-status@v0.0.4
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         LAST_COMMIT_SHA: ${{ github.event.client_payload.LAST_COMMIT_SHA }}
-      with:
-        args: >-
-          --state=failure
-          --context=prombench-status-update
-          --target_url=https://github.com/${{ github.repository }}/actions
+      run: >-
+        curl -i -X POST
+        -H "Authorization: Bearer $GITHUB_TOKEN"
+        -H "Content-Type: application/json"
+        --data '{"state":"failure",  "context": "prombench-status-update", "target_url": "https://github.com/'$GITHUB_REPOSITORY'/actions"}'
+        "https://api.github.com/repos/$GITHUB_REPOSITORY/statuses/$LAST_COMMIT_SHA"
     - name: Update status to success
       if: success()
-      uses: geekodour/gh-actions-custom-status@v0.0.4
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         LAST_COMMIT_SHA: ${{ github.event.client_payload.LAST_COMMIT_SHA }}
-      with:
-        args: >-
-          --state=success
-          --context=prombench-status-update
-          --target_url=https://github.com/${{ github.repository }}/actions
+      run: >-
+        curl -i -X POST
+        -H "Authorization: Bearer $GITHUB_TOKEN"
+        -H "Content-Type: application/json"
+        --data '{"state":"success",  "context": "prombench-status-update", "target_url": "https://github.com/'$GITHUB_REPOSITORY'/actions"}'
+        "https://api.github.com/repos/$GITHUB_REPOSITORY/statuses/$LAST_COMMIT_SHA"
   ###############################
   # Jobs for restarting benchmark  
   ###############################
@@ -119,15 +119,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Update status to pending
-      uses: geekodour/gh-actions-custom-status@v0.0.4
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         LAST_COMMIT_SHA: ${{ github.event.client_payload.LAST_COMMIT_SHA }}
-      with:
-        args: >-
-          --state=pending
-          --context=prombench-status-update
-          --target_url=https://github.com/${{ github.repository }}/actions
+      run: >-
+        curl -i -X POST
+        -H "Authorization: Bearer $GITHUB_TOKEN"
+        -H "Content-Type: application/json"
+        --data '{"state":"pending",  "context": "prombench-status-update", "target_url": "https://github.com/'$GITHUB_REPOSITORY'/actions"}'
+        "https://api.github.com/repos/$GITHUB_REPOSITORY/statuses/$LAST_COMMIT_SHA"
     - name: Run make clean then make deploy to restart test
       id: make_restart
       uses: docker://prombench/prombench:2.0.2
@@ -150,23 +150,23 @@ jobs:
           make deploy;
     - name: Update status to failure
       if: failure()
-      uses: geekodour/gh-actions-custom-status@v0.0.4
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         LAST_COMMIT_SHA: ${{ github.event.client_payload.LAST_COMMIT_SHA }}
-      with:
-        args: >-
-          --state=failure
-          --context=prombench-status-update
-          --target_url=https://github.com/${{ github.repository }}/actions
+      run: >-
+        curl -i -X POST
+        -H "Authorization: Bearer $GITHUB_TOKEN"
+        -H "Content-Type: application/json"
+        --data '{"state":"failure",  "context": "prombench-status-update", "target_url": "https://github.com/'$GITHUB_REPOSITORY'/actions"}'
+        "https://api.github.com/repos/$GITHUB_REPOSITORY/statuses/$LAST_COMMIT_SHA"
     - name: Update status to success
       if: success()
-      uses: geekodour/gh-actions-custom-status@v0.0.4
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         LAST_COMMIT_SHA: ${{ github.event.client_payload.LAST_COMMIT_SHA }}
-      with:
-        args: >-
-          --state=success
-          --context=prombench-status-update
-          --target_url=https://github.com/${{ github.repository }}/actions
+      run: >-
+        curl -i -X POST
+        -H "Authorization: Bearer $GITHUB_TOKEN"
+        -H "Content-Type: application/json"
+        --data '{"state":"success",  "context": "prombench-status-update", "target_url": "https://github.com/'$GITHUB_REPOSITORY'/actions"}'
+        "https://api.github.com/repos/$GITHUB_REPOSITORY/statuses/$LAST_COMMIT_SHA"
