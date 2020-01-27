@@ -22,8 +22,8 @@ jobs:
       env:
         AUTH_FILE: ${{ secrets.PROMBENCH_GKE_AUTH }}
         PROJECT_ID: macro-mile-203600
-        CLUSTER_NAME: prombench
-        ZONE: us-central1-a
+        CLUSTER_NAME: prombench-dummy
+        ZONE: europe-west3-a
         DOMAIN_NAME: prombench.geekodour.xyz
         TEST_INFRA_REPO: https://github.com/testpromorg/prombench.git
         GITHUB_ORG: prometheus-community
@@ -134,8 +134,8 @@ jobs:
       env:
         AUTH_FILE: ${{ secrets.PROMBENCH_GKE_AUTH }}
         PROJECT_ID: macro-mile-203600
-        CLUSTER_NAME: prombench
-        ZONE: us-central1-a
+        CLUSTER_NAME: prombench-dummy
+        ZONE: europe-west3-a
         DOMAIN_NAME: prombench.geekodour.xyz
         TEST_INFRA_REPO: https://github.com/testpromorg/prombench.git
         GITHUB_ORG: prometheus-community
