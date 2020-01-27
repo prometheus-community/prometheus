@@ -80,8 +80,8 @@ jobs:
       env:
         AUTH_FILE: ${{ secrets.PROMBENCH_GKE_AUTH }}
         PROJECT_ID: macro-mile-203600
-        CLUSTER_NAME: prombench
-        ZONE: us-central1-a
+        CLUSTER_NAME: prombench-dummy
+        ZONE: europe-west3-a
         TEST_INFRA_REPO: https://github.com/testpromorg/prombench.git
         PR_NUMBER: ${{ github.event.client_payload.PR_NUMBER }}
       with:
