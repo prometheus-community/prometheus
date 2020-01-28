@@ -22,11 +22,11 @@ jobs:
       env:
         AUTH_FILE: ${{ secrets.PROMBENCH_GKE_AUTH }}
         PROJECT_ID: macro-mile-203600
-        CLUSTER_NAME: prombench
+        CLUSTER_NAME: prombench-dummy
         ZONE: europe-west3-a
-        DOMAIN_NAME: prombench.prometheus.io
-        TEST_INFRA_REPO: https://github.com/prometheus/prombench.git
-        GITHUB_ORG: prometheus
+        DOMAIN_NAME: prombench.geekodour.xyz
+        TEST_INFRA_REPO: https://github.com/testpromorg/prombench.git
+        GITHUB_ORG: prometheus-community
         GITHUB_REPO: prometheus
         PR_NUMBER: ${{ github.event.client_payload.PR_NUMBER }}
         RELEASE: ${{ github.event.client_payload.RELEASE }}
@@ -80,9 +80,9 @@ jobs:
       env:
         AUTH_FILE: ${{ secrets.PROMBENCH_GKE_AUTH }}
         PROJECT_ID: macro-mile-203600
-        CLUSTER_NAME: prombench
+        CLUSTER_NAME: prombench-dummy
         ZONE: europe-west3-a
-        TEST_INFRA_REPO: https://github.com/prometheus/prombench.git
+        TEST_INFRA_REPO: https://github.com/testpromorg/prombench.git
         PR_NUMBER: ${{ github.event.client_payload.PR_NUMBER }}
       with:
         args: >-
@@ -111,7 +111,7 @@ jobs:
         --data '{"state":"success",  "context": "prombench-status-update", "target_url": "https://github.com/'$GITHUB_REPOSITORY'/actions"}'
         "https://api.github.com/repos/$GITHUB_REPOSITORY/statuses/$LAST_COMMIT_SHA"
   ###############################
-  # Jobs for restarting benchmark
+  # Jobs for restarting benchmark  
   ###############################
   benchmark_restart:
     name: Benchmark Restart
@@ -134,11 +134,11 @@ jobs:
       env:
         AUTH_FILE: ${{ secrets.PROMBENCH_GKE_AUTH }}
         PROJECT_ID: macro-mile-203600
-        CLUSTER_NAME: prombench
+        CLUSTER_NAME: prombench-dummy
         ZONE: europe-west3-a
-        DOMAIN_NAME: prombench.prometheus.io
-        TEST_INFRA_REPO: https://github.com/prometheus/prombench.git
-        GITHUB_ORG: prometheus
+        DOMAIN_NAME: prombench.geekodour.xyz
+        TEST_INFRA_REPO: https://github.com/testpromorg/prombench.git
+        GITHUB_ORG: prometheus-community
         GITHUB_REPO: prometheus
         PR_NUMBER: ${{ github.event.client_payload.PR_NUMBER }}
         RELEASE: ${{ github.event.client_payload.RELEASE }}
