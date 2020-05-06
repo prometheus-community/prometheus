@@ -13,7 +13,7 @@ env:
   GITHUB_REPO: prometheus
   PR_NUMBER: ${{ github.event.client_payload.PR_NUMBER }}
   RELEASE: ${{ github.event.client_payload.RELEASE }}
-  GITHUB_STATUS_TARGET_URL: ${{ join(["https://github.com", github.repository, "actions/runs", github.run_id],"/") }}
+  GITHUB_STATUS_TARGET_URL: "https://github.com/"${{github.repository}}"actions/runs/"${{github.run_id}}
 jobs:
   benchmark_start:
     name: Benchmark Start
