@@ -1,24 +1,24 @@
 on: repository_dispatch
 name: Prombench Workflow
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  LAST_COMMIT_SHA: ${{ github.event.client_payload.LAST_COMMIT_SHA }}
+  AUTH_FILE: ${{ secrets.PROMBENCH_GKE_AUTH }}
+  PROJECT_ID: macro-mile-203600
+  CLUSTER_NAME: test-infra
+  ZONE: europe-west3-a
+  DOMAIN_NAME: prombench.prometheus.io
+  TEST_INFRA_REPO: https://github.com/prometheus/test-infra.git
+  GITHUB_ORG: prometheus
+  GITHUB_REPO: prometheus
+  PR_NUMBER: ${{ github.event.client_payload.PR_NUMBER }}
+  RELEASE: ${{ github.event.client_payload.RELEASE }}
+  GITHUB_STATUS_TARGET_URL: "https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
 jobs:
   benchmark_start:
     name: Benchmark Start
     if: github.event.action == 'prombench_start'
     runs-on: ubuntu-latest
-    env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      LAST_COMMIT_SHA: ${{ github.event.client_payload.LAST_COMMIT_SHA }}
-      AUTH_FILE: ${{ secrets.PROMBENCH_GKE_AUTH }}
-      PROJECT_ID: macro-mile-203600
-      CLUSTER_NAME: test-infra
-      ZONE: europe-west3-a
-      DOMAIN_NAME: prombench.prometheus.io
-      TEST_INFRA_REPO: https://github.com/prometheus/test-infra.git
-      GITHUB_ORG: prometheus
-      GITHUB_REPO: prometheus
-      PR_NUMBER: ${{ github.event.client_payload.PR_NUMBER }}
-      RELEASE: ${{ github.event.client_payload.RELEASE }}
-      GITHUB_STATUS_TARGET_URL: "https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
     steps:
     - name: Update status to pending
       run: >-
