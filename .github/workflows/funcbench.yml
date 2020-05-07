@@ -29,13 +29,13 @@ jobs:
     - name: Deploy funcbench
       uses: docker://prombenchgeekodour/funcbench:master
       with:
-        entrypoint: 'start.sh'
+        entrypoint: 'docker_entrypoint'
         args: make deploy
     - name: Delete all resources
       if: always()
       uses: docker://prombenchgeekodour/funcbench:master
       with:
-        entrypoint: 'start.sh'
+        entrypoint: 'docker_entrypoint'
         args: make clean
     - name: Update status to failure
       if: failure()
