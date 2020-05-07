@@ -5,11 +5,10 @@ env:
   LAST_COMMIT_SHA: ${{ github.event.client_payload.LAST_COMMIT_SHA }}
   AUTH_FILE: ${{ secrets.TEST_INFRA_GKE_AUTH }}
   PROJECT_ID: macro-mile-203600
-  CLUSTER_NAME: test-infra
+  CLUSTER_NAME: test-infra-geekodour
   ZONE: europe-west3-a
-  DOMAIN_NAME: prombench.prometheus.io
-  TEST_INFRA_REPO: https://github.com/prometheus/test-infra.git
-  GITHUB_ORG: prometheus
+  DOMAIN_NAME: prombench.geekodour.xyz
+  GITHUB_ORG: prometheus-community
   GITHUB_REPO: prometheus
   PR_NUMBER: ${{ github.event.client_payload.PR_NUMBER }}
   RELEASE: ${{ github.event.client_payload.RELEASE }}
@@ -29,7 +28,7 @@ jobs:
         "https://api.github.com/repos/$GITHUB_REPOSITORY/statuses/$LAST_COMMIT_SHA"
     - name: Run make deploy to start test
       id: make_deploy
-      uses: docker://prominfra/prombench:master
+      uses: docker://prombenchgeekodour/prombench:master
       with:
         args: >-
           until make all_nodepools_deleted; do echo "waiting for nodepools to be deleted"; sleep 10; done;
@@ -64,7 +63,7 @@ jobs:
         "https://api.github.com/repos/$GITHUB_REPOSITORY/statuses/$LAST_COMMIT_SHA"
     - name: Run make clean to stop test
       id: make_clean
-      uses: docker://prominfra/prombench:master
+      uses: docker://prombenchgeekodour/prombench:master
       with:
         args: >-
           until make all_nodepools_running; do echo "waiting for nodepools to be created"; sleep 10; done;
@@ -99,7 +98,7 @@ jobs:
         "https://api.github.com/repos/$GITHUB_REPOSITORY/statuses/$LAST_COMMIT_SHA"
     - name: Run make clean then make deploy to restart test
       id: make_restart
-      uses: docker://prominfra/prombench:master
+      uses: docker://prombenchgeekodour/prombench:master
       with:
         args: >-
           until make all_nodepools_running; do echo "waiting for nodepools to be created"; sleep 10; done;
