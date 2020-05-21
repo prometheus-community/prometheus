@@ -29,14 +29,16 @@ jobs:
     - name: Prepare nodepool
       uses: docker://prombenchgeekodour/funcbench:master
       with:
-        entrypoint: 'docker_entrypoint'
-        args: make deploy
+        working_directory: /funcbench
+        entrypoint: make
+        args: deploy
     - name: Delete all resources
       if: always()
       uses: docker://prombenchgeekodour/funcbench:master
       with:
-        entrypoint: 'docker_entrypoint'
-        args: make clean
+        working_directory: /funcbench
+        entrypoint: make
+        args: clean
     - name: Update status to failure
       if: failure()
       run: >-
