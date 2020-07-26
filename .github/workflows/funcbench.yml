@@ -33,7 +33,7 @@ jobs:
         args: make deploy
     - name: Delete all resources
       if: always()
-      uses: docker://prominfra/funcbench:master
+      uses: docker://prombenchgeekodour/funcbench:master
       with:
         entrypoint: 'docker_entrypoint'
         args: make clean
