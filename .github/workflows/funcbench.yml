@@ -9,8 +9,9 @@ jobs:
       AUTH_FILE: ${{ secrets.TEST_INFRA_GKE_AUTH }}
       BRANCH: ${{ github.event.client_payload.BRANCH }}
       BENCH_FUNC_REGEX: ${{ github.event.client_payload.BENCH_FUNC_REGEX }}
+      PACKAGE_PATH: ${{ github.event.client_payload.PACKAGE_PATH }}
       GITHUB_TOKEN: ${{ secrets.PROMBOT_TOKEN }}
-      GITHUB_ORG: prometheus
+      GITHUB_ORG: prometheus-community
       GITHUB_REPO: prometheus
       GITHUB_STATUS_TARGET_URL: https://github.com/${{github.repository}}/actions/runs/${{github.run_id}}
       LAST_COMMIT_SHA: ${{ github.event.client_payload.LAST_COMMIT_SHA }}
