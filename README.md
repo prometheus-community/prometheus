@@ -1,4 +1,4 @@
-# Prometheus
+# Prometheuss
 
 [![CircleCI](https://circleci.com/gh/prometheus/prometheus/tree/master.svg?style=shield)][circleci]
 [![Docker Repository on Quay](https://quay.io/repository/prometheus/prometheus/status)][quay]
@@ -8,7 +8,7 @@
 [![fuzzit](https://app.fuzzit.dev/badge?org_id=prometheus&branch=master)](https://fuzzit.dev)
 [![Gitpod ready-to-code](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/prometheus/prometheus)
 
-Visit [prometheus.io](https://prometheus.io) for the full documentation,
+Visit [prometheus.io](https://prometheus.io) for the full documentation.,
 examples and guides.
 
 Prometheus, a [Cloud Native Computing Foundation](https://cncf.io/) project, is a systems and service monitoring system. It collects metrics
