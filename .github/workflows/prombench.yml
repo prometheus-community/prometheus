@@ -4,18 +4,21 @@ on:
 name: Prombench Workflow
 env:
   AUTH_FILE: ${{ secrets.TEST_INFRA_PROVIDER_AUTH }}
-  CLUSTER_NAME: test-infra
+  CLUSTER_NAME: test-infra-eks
   DOMAIN_NAME: prombench.prometheus.io
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  GITHUB_ORG: prometheus
+  GITHUB_ORG: prometheus-community
   GITHUB_REPO: prometheus
   GITHUB_STATUS_TARGET_URL: https://github.com/${{github.repository}}/actions/runs/${{github.run_id}}
   LAST_COMMIT_SHA: ${{ github.event.client_payload.LAST_COMMIT_SHA }}
   GKE_PROJECT_ID: macro-mile-203600
   PR_NUMBER: ${{ github.event.client_payload.PR_NUMBER }}
-  PROVIDER: gke
+  PROVIDER: eks
   RELEASE: ${{ github.event.client_payload.RELEASE }}
-  ZONE: europe-west3-a
+  ZONE: eu-west-1
+  EKS_WORKER_ROLE_ARN: arn:aws:iam::082671108254:role/test-infra-nodes
+  EKS_CLUSTER_ROLE_ARN: arn:aws:iam::082671108254:role/test-infra-cluster
+  EKS_SUBNET_IDS: subnet-00a297450c771ce04,subnet-014681f690f772ce1,subnet-047611c3b7f798845
 jobs:
   benchmark_start:
     name: Benchmark Start
